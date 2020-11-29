@@ -1,38 +1,47 @@
-.App {
-  text-align: center;
+@import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css);
+
+/* .side-menu {
+  height: 100vh;
+  width: 30%;
+  left: 70%;
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  background: lightgray;
+  z-index: 1500;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@media(max-width: 768px) {
+  .side-menu {
+    width: 100%;
+    left: 0;
   }
+} */
+.menu-inner {
+  height: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.bm-burger-button {
+  position: fixed;
+  width: 36px;
+  height: 30px;
+  right: 36px;
+  top: 36px;
+  visibility: hidden;
 }
 
-.App-link {
-  color: #61dafb;
+/* Color/shape of burger icon bars */
+.bm-burger-bars {
+  background: #373a47;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Position and sizing of clickable cross button */
+/* .bm-cross-button {
+  height: 24px;
+  width: 24px;
+} */
+
+/* Color/shape of close button cross */
+/* .bm-cross {
+  background: #bdc3c7;
+} */
