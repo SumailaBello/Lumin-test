@@ -13,7 +13,7 @@ export class Productitem extends Component {
 
     addToCart(item, index) {
         console.log(item);
-        this.props.addToCart(item, index)
+        this.props.addToCart(item, index);
     }
     render() {
         if(this.props.products) {

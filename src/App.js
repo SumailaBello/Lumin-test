@@ -46,12 +46,9 @@ export class App extends Component {
   addToCart(item, index) {
     let cart = this.state.cart;
     if(cart.includes(item)) {
+      alert("yes")
       // index of item in cart
       let cartIndx = cart.indexOf(item);
-
-      // let prodIndx = this.state.products.indexOf(item);
-      // let itemCopy = this.state.products[prodIndx];
-
       cart[cartIndx].quantity++;
       // cart[cartIndx].price = cart[cartIndx].quantity * itemCopy.price;
 
@@ -61,17 +58,18 @@ export class App extends Component {
         cart: cart
       })
       // this.calcTotal(cart[cartIndx].price);
+      return
     }
-    else{ //add it to cart for the first time
-      // alert("Nope");
-      item['quantity'] = 0;
+    // else{ //add it to cart for the first time
+      alert("Nope");
+      item['quantity'] = 1;
       cart.push(item);
       this.setState({
         cart: cart
       })
 
-      this.addQtty(item, index)
-    }
+      // this.addQtty(item, index)
+    // }
 
     this.setState({
       showMenu: true
@@ -105,18 +103,20 @@ export class App extends Component {
   redQtty(item, index) {
     if(item.quantity === 1) {
       this.removeItem(item)
+      // alert("Zero");
     }
     else {
       let cart = [...this.state.cart];
       // index of item in cart
       let cartIndx = cart.indexOf(item);
       cart[cartIndx].quantity > 0? cart[cartIndx].quantity-- : cart[cartIndx].quantity = 0;
-      cart[cartIndx].price = cart[cartIndx].price * cart[cartIndx].quantity;
+      // cart[cartIndx].price = cart[cartIndx].price * cart[cartIndx].quantity;
       this.setState({
         cart: cart
       })
-      // this.calcTotal(cart[cartIndx].price * -1) //converted to negative number
     }
+
+      // this.calcTotal(cart[cartIndx].price * -1) //converted to negative number
 
   }
 
@@ -142,7 +142,7 @@ export class App extends Component {
       })
 
       // calculates total
-      this.calcTotal();
+      // this.calcTotal();
     }
 
   toggleMenu() {
@@ -174,7 +174,7 @@ export class App extends Component {
                 </div>
               </div>
               {/* cart item */}
-              { this.state.cart.length > 0 ? <Item Cart = {JSON.parse(JSON.stringify(this.state.cart))} Products = {JSON.parse(JSON.stringify(this.state.products))} removeItem = {this.removeItem} addQtty = {this.addQtty} redQtty = {this.redQtty} /> : <p className = "text-center">No items in cart</p> }
+              { this.state.cart.length > 0 ? <Item Cart = {JSON.parse(JSON.stringify(this.state.cart))} parentCart = {this.state.cart} Products = {JSON.parse(JSON.stringify(this.state.products))} removeItem = {this.removeItem} addQtty = {this.addQtty} redQtty = {this.redQtty} /> : <p className = "text-center">No items in cart</p> }
             </div>
             
             <footer className = "sticky-bottom bg-light px-4 py-3" style = {{borderTop: '1px solid #4b5548'}}>
@@ -194,7 +194,7 @@ export class App extends Component {
           </Menu>
           <Header cart = {this.state.cart} toggleMenu = {this.toggleMenu} />
           <div className="page-wrap">
-            <Products products = {this.state.products} addToCart = {this.addToCart}/>
+            <Products products = {this.state.products} productsCopy = {JSON.parse(JSON.stringify(this.state.products))} addToCart = {this.addToCart} />
           </div>
         </div>
       )

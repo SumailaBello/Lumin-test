@@ -4,27 +4,65 @@ import React, { Component } from 'react';
 export class Item extends Component {
     state = {
         items: this.props.Cart,
+        parentItems: this.props.parentCart,
         products: this.props.Products
     }
 
     componentDidMount() {
         this.addQtty = this.addQtty.bind(this);
         this.redQtty = this.redQtty.bind(this);
+        this.removeItem = this.removeItem.bind(this);
         console.log(this.state.products)
         console.log(this.state.items)
     }
 
+    // increase quantity
     addQtty(item, index) {
-        this.props.redQtty(item);
+        // this.props.addQtty(item);
+        let items = this.state.parentItems;
+        let itemIndx = this.state.parentItems.indexOf(item);
+        items[itemIndx].quantity++;
+        this.setState({
+            parentItems: items
+        })
     }
 
     redQtty(item, index) {
-        this.props.redQtty(item);
+        // this.props.redQtty(item);
+        if(item.quantity === 1) {
+            this.props.removeItem(item)
+            alert("Zero")
+          }
+          else {
+            let items = this.state.parentItems;
+            let itemIndx = this.state.parentItems.indexOf(item);
+            items[itemIndx].quantity > 0? items[itemIndx].quantity-- : items[itemIndx].quantity = 0;
+            this.setState({
+                parentItems: items
+            })
+          }
+ 
     }
+
+    // removes item from cart
+    removeItem(item) {
+        console.log(item)
+        let items = this.state.parentItems;
+        items = items.filter((obj) => {
+        return obj !== item
+        })
+        this.setState({
+            parentItems: items
+        })
+
+
+        // calculates total amt //this.calcTotal();
+    }
+
     render() {
         // if(this.props.Cart) {
             return (
-                this.state.items.map((item, index) => (
+                this.props.parentCart.map((item, index) => (
                     <div className="row bg-white mb-3" key = {item.id}>
                         <div className="col-8 p-2">
                             <small>{item.title}</small> <br/>
@@ -36,7 +74,7 @@ export class Item extends Component {
                                     <button className="btn bg-white btn-sm d-inline m-1" onClick = {()=> this.addQtty(item, index)}>+</button>
                                 </span>
                                 <span className = "float-right">
-                                    <p>${this.state.items[index].price}</p>
+                                    <p>${item.price}</p>
                                 </span>
                             </div>
                         </div>
