@@ -25,7 +25,7 @@ export class Productitem extends Component {
                         <div className="col-6 col-md-4 text-center pt-5 mb-3" key = {product.id} style = {colStyle}>
                             <img className = "product-img" src={product.image_url} alt="product-img" style = {imgStyle}/> <br/>
                             <p>{product.title}</p>
-                            <p>From {this.props.currency} {product.price}</p>
+                            <p>From {this.props.currency} { product.quantity > 1? product.price/product.quantity : product.price}</p>
                             <button className="btn text-white" style = {buttonStyle} onClick = { ()=> this.addToCart(product)}>Add to Cart</button>
                         </div>
                     )
