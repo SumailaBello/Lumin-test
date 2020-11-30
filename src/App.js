@@ -57,6 +57,29 @@ export class App extends Component {
         this.setState({
           products: data.data.products
         })
+        // updating cart values
+        if(this.state.cart.length > 0) {
+          let cart = this.state.cart;
+          let products = data.data.products
+          cart.forEach((item, index) => {
+            products.forEach((prod, indx) => {
+              if(prod.id === item.id) {
+                if(item.quantity > 1) {
+                  cart[index].price = prod.price * item.quantity;
+                }
+                else {
+                  cart[index].price = prod.price;
+                }
+                
+              }
+            })
+          })
+          this.setState({
+            cart: cart
+          })
+          // gets total cart value
+          this.getTotal(cart)
+        }
       })
       .catch( error => {
         console.log(error)
