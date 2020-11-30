@@ -6,6 +6,7 @@ export class Item extends Component {
         items: this.props.Cart,
         parentItems: this.props.parentCart,
         products: this.props.Products,
+        parentProducts: this.props.parentProducts,
         totalPrice: this.props.totalPrice
     }
 
@@ -74,7 +75,9 @@ export class Item extends Component {
     // removes item from cart
     removeItem(item) {
         console.log(item)
-        let items = this.state.parentItems;
+        item.quantity = 0;
+
+        let items = this.state.parentItems; //items in cart in parent component
         items = items.filter((obj) => {
         return obj !== item
         })

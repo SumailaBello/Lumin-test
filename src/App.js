@@ -204,7 +204,8 @@ export class App extends Component {
 
   // calculates total price
   getTotal(array) {
-    let total = this.state.totalPrice
+    // let total = this.state.totalPrice
+    let total = 0;
     array.forEach( item => {
       total += item.price;
     })
@@ -238,7 +239,7 @@ export class App extends Component {
                 </div>
               </div>
               {/* cart item */}
-              { this.state.cart.length > 0 ? <Item getTotal = {this.getTotal} Cart = {JSON.parse(JSON.stringify(this.state.cart))} parentCart = {this.state.cart} Products = {JSON.parse(JSON.stringify(this.state.products))} removeItem = {this.removeItem} addQtty = {this.addQtty} redQtty = {this.redQtty} totalPrice = {this.state.totalPrice} currency = {this.state.defaultCurrency} /> : <p className = "text-center">No items in cart</p> }
+              { this.state.cart.length > 0 ? <Item getTotal = {this.getTotal} Cart = {JSON.parse(JSON.stringify(this.state.cart))} parentCart = {this.state.cart} Products = {JSON.parse(JSON.stringify(this.state.products))} prentProducts = {this.state.products} removeItem = {this.removeItem} addQtty = {this.addQtty} redQtty = {this.redQtty} totalPrice = {this.state.totalPrice} currency = {this.state.defaultCurrency} /> : <p className = "text-center">No items in cart</p> }
             </div>
             
             <footer className = "sticky-bottom bg-light px-4 py-3" style = {{borderTop: '1px solid #4b5548'}}>
@@ -246,7 +247,7 @@ export class App extends Component {
               <div className="row">
                 <div className="col">
                   <span className = "float-left">Subtotal</span>
-                  <span className = "float-right">{this.state.defaultCurrency}{this.state.totalPrice}</span>
+                  <span className = "float-right">{this.state.defaultCurrency}{this.state.cart.length > 0? this.state.totalPrice: 0}</span>
                 </div>
                 <div className="col-12 text-uppercase bg-white text-center">
                   <button className = "btn btn-block text-uppercase bg-white mb-2" style = {{border: '1px solid #4b5548', borderRadius: '0'}}><small>Make this a Subscription (Save 20%)</small></button>
