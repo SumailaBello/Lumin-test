@@ -3,7 +3,6 @@ import Header from './components/Header/Header';
 import Products from './components/Products/Products';
 import Item from './components/Item/Item';
 import { slide as Menu } from "react-burger-menu";
-import swal from 'sweetalert';
 import './App.css';
 
 export class App extends Component {
@@ -70,7 +69,6 @@ export class App extends Component {
                 else {
                   cart[index].price = prod.price;
                 }
-                
               }
             })
           })
@@ -215,7 +213,6 @@ export class App extends Component {
       defaultCurrency: selected_currency
     })
     this.loadProducts(selected_currency);
-    swal("Currency changed!", "Readd items to cart to get updated prices", "warning")
   }
 
   // on menu close
