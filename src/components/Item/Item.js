@@ -5,13 +5,15 @@ export class Item extends Component {
     state = {
         items: this.props.Cart,
         parentItems: this.props.parentCart,
-        products: this.props.Products
+        products: this.props.Products,
+        totalPrice: this.props.totalPrice
     }
 
     componentDidMount() {
         this.addQtty = this.addQtty.bind(this);
         this.redQtty = this.redQtty.bind(this);
         this.removeItem = this.removeItem.bind(this);
+        this.getTotal = this.getTotal.bind(this);
         console.log(this.state.products)
         console.log(this.state.items)
     }
@@ -21,26 +23,51 @@ export class Item extends Component {
         // this.props.addQtty(item);
         let items = this.state.parentItems;
         let itemIndx = this.state.parentItems.indexOf(item);
+
+        let initProd;
+        this.state.products.forEach((product, indx) => {
+            if(product.id === item.id) {
+                initProd = product;
+            }
+        });
+        // console.log(prodIndx);
+        console.log(itemIndx);
+        console.log(index);
+        console.log(initProd);
+        console.log(item);
         items[itemIndx].quantity++;
+        items[itemIndx].price = items[itemIndx].quantity * initProd.price;
         this.setState({
             parentItems: items
         })
+
+        this.getTotal(this.props.parentCart)
     }
 
     redQtty(item, index) {
         // this.props.redQtty(item);
         if(item.quantity === 1) {
-            this.props.removeItem(item)
-            alert("Zero")
+            this.props.removeItem(item);
+            // alert("Zero")
           }
           else {
             let items = this.state.parentItems;
             let itemIndx = this.state.parentItems.indexOf(item);
+            let initProd;
+            // matching the selected item to the original product as a reference for initial information
+            this.state.products.forEach((product, indx) => {
+                if(product.id === item.id) {
+                    initProd = product;
+                }
+            });
             items[itemIndx].quantity > 0? items[itemIndx].quantity-- : items[itemIndx].quantity = 0;
+            items[itemIndx].price = items[itemIndx].price - initProd.price;
             this.setState({
                 parentItems: items
             })
           }
+
+          this.getTotal(this.props.parentCart)
  
     }
 
@@ -54,9 +81,11 @@ export class Item extends Component {
         this.setState({
             parentItems: items
         })
+        this.getTotal(this.props.parentCart);
+    }
 
-
-        // calculates total amt //this.calcTotal();
+    getTotal(array) {
+        this.props.getTotal(array);
     }
 
     render() {
@@ -74,7 +103,7 @@ export class Item extends Component {
                                     <button className="btn bg-white btn-sm d-inline m-1" onClick = {()=> this.addQtty(item, index)}>+</button>
                                 </span>
                                 <span className = "float-right">
-                                    <p>${item.price}</p>
+                                    <p>{this.props.currency}{item.price}</p>
                                 </span>
                             </div>
                         </div>

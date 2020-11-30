@@ -1,0 +1,11 @@
+.select-style {
+    width : 200%;
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+
+@media(max-width: 767px) {
+    .select-style {
+        width : 150%;
+    }
+}

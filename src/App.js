@@ -3,6 +3,7 @@ import Header from './components/Header/Header';
 import Products from './components/Products/Products';
 import Item from './components/Item/Item';
 import { slide as Menu } from "react-burger-menu";
+import swal from 'sweetalert';
 import './App.css';
 
 export class App extends Component {
@@ -11,7 +12,9 @@ export class App extends Component {
     loading: true,
     cart: [],
     showMenu: false,
-    totalPrice: 0
+    totalPrice: 0,
+    currencies: [],
+    defaultCurrency: "USD"
   }
 
   componentDidMount() {
@@ -20,15 +23,33 @@ export class App extends Component {
     this.removeItem = this.removeItem.bind(this);
     this.addQtty = this.addQtty.bind(this);
     this.redQtty = this.redQtty.bind(this);
-    this.calcTotal = this.calcTotal.bind(this);
+    this.loadProducts = this.loadProducts.bind(this);
+    this.getCurrencies = this.getCurrencies.bind(this);
+    this.currencyChange = this.currencyChange.bind(this);
+    this.handleOnClose = this.handleOnClose.bind(this);
+    this.getTotal = this.getTotal.bind(this);
 
-    console.log("Did mount")
+    console.log("Did mount");
+    this.loadProducts();
+    this.getCurrencies()
+    
+  }
+
+  // loads products from api
+  loadProducts(curr) {
     const url = "https://pangaea-interviews.now.sh/api/graphql";
+    let currency;
+    if(curr) {
+      currency = curr
+    }
+    else {
+      currency = this.state.defaultCurrency
+    }
 
     fetch(url, {
       method: 'POST',
       // headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: '{ products { id title price (currency: USD) image_url } }' }),
+      body: JSON.stringify({ query: `{ products { id title price (currency: ${currency}) image_url } }` }),
     })
       .then(data => data.json())
       .then(data => {
@@ -42,34 +63,56 @@ export class App extends Component {
       })
   }
 
+  // loads currencies from api
+  getCurrencies() {
+    const url = "https://pangaea-interviews.now.sh/api/graphql";
+
+    fetch(url, {
+      method: 'POST',
+      // headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: `{ currency }` }),
+    })
+      .then(data => data.json())
+      .then(data => {
+        console.log(data.data);
+        let currencies = data.data.currency;
+        // currencies.forEach( currency => {
+        //   currencies.push({
+        //     label: currency,
+        //     value: currency
+        //   })
+        // })
+        this.setState({
+          currencies: currencies
+        })
+      })
+      .catch( error => {
+        console.log(error)
+      })
+  }
+
   // add item to cart
   addToCart(item, index) {
     let cart = this.state.cart;
     if(cart.includes(item)) {
-      alert("yes")
       // index of item in cart
       let cartIndx = cart.indexOf(item);
       cart[cartIndx].quantity++;
-      // cart[cartIndx].price = cart[cartIndx].quantity * itemCopy.price;
 
       // adding to quantity if already exists in cart
-      // this.addQtty(item, index)
       this.setState({
         cart: cart
       })
-      // this.calcTotal(cart[cartIndx].price);
+      this.getTotal(this.state.cart)
       return
     }
     // else{ //add it to cart for the first time
-      alert("Nope");
       item['quantity'] = 1;
       cart.push(item);
       this.setState({
         cart: cart
       })
-
-      // this.addQtty(item, index)
-    // }
+      this.getTotal(this.state.cart);
 
     this.setState({
       showMenu: true
@@ -120,16 +163,6 @@ export class App extends Component {
 
   }
 
-  calcTotal(price) {
-    console.log("total")
-    let totalPrice = this.state.totalPrice;
-    totalPrice += price;
-
-    this.setState({
-      totalPrice: totalPrice
-    })
-  }
-
   // removes item from cart
   removeItem(item) {
     console.log(item)
@@ -152,11 +185,40 @@ export class App extends Component {
     })
   }
 
+  currencyChange(event) {
+    console.log(event.target.value);
+    let selected_currency = event.target.value
+    this.setState({
+      defaultCurrency: selected_currency
+    })
+    this.loadProducts(selected_currency);
+    swal("Currency changed!", "Readd items to cart to get updated prices", "warning")
+  }
+
+  // on menu close
+  handleOnClose() {
+    this.setState({
+      showMenu: false
+    })
+  }
+
+  // calculates total price
+  getTotal(array) {
+    let total = this.state.totalPrice
+    array.forEach( item => {
+      total += item.price;
+    })
+    this.setState({
+        totalPrice: total
+    })
+  }
+
   render() {
+    let currencies = this.state.currencies;
       return (
         <div id = "main">
           {/* side menu displays cart */}
-          <Menu width={ '30%' } height = {'100%'} isOpen={ this.state.showMenu } pageWrapId={ "page-wrap" } outerContainerId={ "main"} right>
+          <Menu width={ '30%' } onClose={ this.handleOnClose } className = "menu-style" height = {'100%'} isOpen={ this.state.showMenu } pageWrapId={ "page-wrap" } outerContainerId={ "main"} right>
             <div className="bg-light menu-inner container-fluid p-3">
               <div className="row text-center mb-3">
                 <div className="col ">
@@ -168,13 +230,15 @@ export class App extends Component {
               </div>
               <div className="row mb-3">
                 <div className="col">
-                  <select>
-                    <option value="USD">USD</option>
+                  <select onChange = {this.currencyChange}>
+                    {currencies.map((currency, index) => {
+                      return <option key = {index}>{currency}</option>;
+                    })}
                   </select>
                 </div>
               </div>
               {/* cart item */}
-              { this.state.cart.length > 0 ? <Item Cart = {JSON.parse(JSON.stringify(this.state.cart))} parentCart = {this.state.cart} Products = {JSON.parse(JSON.stringify(this.state.products))} removeItem = {this.removeItem} addQtty = {this.addQtty} redQtty = {this.redQtty} /> : <p className = "text-center">No items in cart</p> }
+              { this.state.cart.length > 0 ? <Item getTotal = {this.getTotal} Cart = {JSON.parse(JSON.stringify(this.state.cart))} parentCart = {this.state.cart} Products = {JSON.parse(JSON.stringify(this.state.products))} removeItem = {this.removeItem} addQtty = {this.addQtty} redQtty = {this.redQtty} totalPrice = {this.state.totalPrice} currency = {this.state.defaultCurrency} /> : <p className = "text-center">No items in cart</p> }
             </div>
             
             <footer className = "sticky-bottom bg-light px-4 py-3" style = {{borderTop: '1px solid #4b5548'}}>
@@ -182,10 +246,9 @@ export class App extends Component {
               <div className="row">
                 <div className="col">
                   <span className = "float-left">Subtotal</span>
-                  <span className = "float-right">${this.state.totalPrice}</span>
+                  <span className = "float-right">{this.state.defaultCurrency}{this.state.totalPrice}</span>
                 </div>
                 <div className="col-12 text-uppercase bg-white text-center">
-                  {/* <small>Make this a Subscription (Save 20%)</small> */}
                   <button className = "btn btn-block text-uppercase bg-white mb-2" style = {{border: '1px solid #4b5548', borderRadius: '0'}}><small>Make this a Subscription (Save 20%)</small></button>
                   <button className="btn btn-block text-white" style = {{background: "#4b5548", borderRadius: '0'}}>PROCEED TO CHECKOUT</button>
                 </div>
@@ -194,7 +257,7 @@ export class App extends Component {
           </Menu>
           <Header cart = {this.state.cart} toggleMenu = {this.toggleMenu} />
           <div className="page-wrap">
-            <Products products = {this.state.products} productsCopy = {JSON.parse(JSON.stringify(this.state.products))} addToCart = {this.addToCart} />
+            <Products products = {this.state.products} productsCopy = {JSON.parse(JSON.stringify(this.state.products))} currency = {this.state.defaultCurrency} addToCart = {this.addToCart} cart = {this.state.cart} />
           </div>
         </div>
       )

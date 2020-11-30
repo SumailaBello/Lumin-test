@@ -8,11 +8,11 @@ export class Header extends Component {
                 <nav className="container-fluid navbar navbar-light ">
                     {/* <a className="navbar-brand" href = "#">Navbar</a> */}
                     <div className = "float-left">
-                        <span className = "btn header-style mr-5">Lumin</span>
-                        <span className = "btn mr-4">Shop</span> <span className = "btn">Learn</span>
+                        <span className = "btn header-style mr-2 mr-lg-5">Lumin</span>
+                        <span className = "btn mr-2 mr-lg-4">Shop</span> <span className = "btn">Learn</span>
                     </div>
 
-                    <div className = "float-right">
+                    <div className = "mx-auto mx-lg-0 float-lg-right">
                         <span className = "btn mr-5">Account</span>
                         <span className = "btn fas fa-cart-plus" onClick = {this.props.toggleMenu}> </span> 
                         <span>{this.props.cart.length}</span>

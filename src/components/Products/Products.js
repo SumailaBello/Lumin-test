@@ -18,7 +18,7 @@ export class Products extends Component {
                             <div className = "col">
                                 <p className = "float-left">A 360° look at Lumin</p>
                                 <div className = "float-right pr-5">
-                                    <select style = {style}>
+                                    <select className = "select-style">
                                         <option value = "">Filter by</option>
                                         <option value = "latest">Latest</option>
                                         <option value = "price">Price</option>
@@ -36,19 +36,13 @@ export class Products extends Component {
                 <div className = "bg-light pt-3 pb-5">
                     <div className = "container mt-3">
                         <div className="row">
-                            <Productitem products = {this.props.products} addToCart = {this.props.addToCart} />
+                            <Productitem products = {this.props.products} productsCopy = {JSON.parse(JSON.stringify(this.props.productsCopy))} addToCart = {this.props.addToCart} currency = {this.props.currency} cart = {this.props.parentCart} />
                         </div>
                     </div>
                 </div>
             </div>
         )
     }
-}
-
-let style = {
-    width : "200%",
-    padding: "10px",
-    border: "1px solid lightgray"
 }
 
 Productitem.propTypes = {

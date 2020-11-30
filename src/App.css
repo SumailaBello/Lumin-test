@@ -1,22 +1,5 @@
 @import url(https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css);
 
-/* .side-menu {
-  height: 100vh;
-  width: 30%;
-  left: 70%;
-  position: sticky;
-  top: 0;
-  bottom: 0;
-  background: lightgray;
-  z-index: 1500;
-}
-
-@media(max-width: 768px) {
-  .side-menu {
-    width: 100%;
-    left: 0;
-  }
-} */
 .menu-inner {
   height: 100%;
 }
@@ -45,3 +28,9 @@
 /* .bm-cross {
   background: #bdc3c7;
 } */
+
+@media(max-width: 990px) {
+  .menu-style {
+    width: 100% !important;
+  }
+}
